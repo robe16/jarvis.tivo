@@ -1,0 +1,18 @@
+{
+  "service_id": "lounge_tivo",
+  "name_long": "Lounge Virgin Media",
+  "name_short": "Virgin Media",
+  "groups": [
+    "Lounge"
+  ],
+  "subservices": [],
+  "details": {
+    "mak": "1234567890",
+    "pin": "0000",
+    "ipaddress": "192.168.0.xxx",
+    "package": [
+      "XL",
+      "movies_sky"
+    ]
+  }
+}
