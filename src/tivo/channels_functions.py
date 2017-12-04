@@ -12,6 +12,17 @@ def get_channel_name_from_key(key):
     #
     return False
 
+def get_channel_details_from_key(key):
+    for chan in channels:
+        if channels[chan]['sd']:
+            if channels[chan]['sd']['key'] == key:
+                return {'name': chan, 'quality': 'sd'}
+        elif channels[chan]['hd']:
+            if channels[chan]['hd']['key'] == key:
+                return {'name': chan, 'quality': 'hd'}
+    #
+    return False
+
 def get_channel_key_from_name(name):
     #
     if name in channels.keys():
