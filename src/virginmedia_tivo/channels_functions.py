@@ -1,5 +1,13 @@
-from virginmedia_tivo.channels import channels
 from config.config import get_cfg_details_package
+
+# Issue with IDE and production running of script - resolved with try/except below
+try:
+    # IDE
+    from virginmedia_tivo.channels import channels
+except:
+    # Production
+    from channels import channels
+
 
 def get_channel_name_from_key(key):
     for chan in channels:

@@ -93,7 +93,7 @@ class Virginmedia_tivo():
                     xml_files.append(item.find('Details'))
                     files_count += 1
                 #
-                if files_count<50:
+                if files_count < 50:
                     files_repeat = False
                 else:
                     loop_count += 1
