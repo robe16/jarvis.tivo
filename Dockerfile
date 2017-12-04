@@ -8,10 +8,10 @@ ENV portA ${portApplication}
 # Update
 RUN apt-get update && apt-get install -y python python-pip
 
-WORKDIR /jarvis/tivo
+WORKDIR /jarvis/virginmedia_tivo
 
 # Bundle app source
-COPY src /jarvis/tivo
+COPY src /jarvis/virginmedia_tivo
 
 # Copy app dependencies
 COPY requirements.txt requirements.txt

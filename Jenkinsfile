@@ -16,10 +16,10 @@ node {
         //
         string(name: 'githubUrl',
                description: 'GitHub URL for checking out project',
-               defaultValue: 'https://github.com/robe16/jarvis.tivo.git')
+               defaultValue: 'https://github.com/robe16/jarvis.virginmedia_tivo.git')
         string(name: 'appName',
                description: 'Name of application for Docker image and container',
-               defaultValue: 'jarvis.tivo')
+               defaultValue: 'jarvis.virginmedia_tivo')
         string(name: 'deploymentServer',
                description: 'Server to deploy the Docker container',
                defaultValue: '*')
@@ -40,8 +40,8 @@ node {
         build_args = ["--build-arg portApplication=${portApplication}"].join(" ")
         //
         //
-        docker_volumes = ["-v ${params.fileConfig}:/jarvis/tivo/config/config.json",
-                          "-v ${params.folderLog}:/jarvis/tivo/log/logfiles/"].join(" ")
+        docker_volumes = ["-v ${params.fileConfig}:/jarvis/virginmedia_tivo/config/config.json",
+                          "-v ${params.folderLog}:/jarvis/virginmedia_tivo/log/logfiles/"].join(" ")
         //
         //
         deployLogin = "${params.deploymentUsername}@${params.deploymentServer}"
