@@ -2,7 +2,7 @@ from bottle import HTTPError
 from bottle import get, post
 from bottle import request, run, HTTPResponse
 
-from tivo.tivo import tivo
+from virginmedia_tivo.virginmedia_tivo import Virginmedia_tivo
 from resources.global_resources.variables import *
 from config.config import get_cfg_serviceid, get_cfg_name_long, get_cfg_name_short, get_cfg_groups, get_cfg_subservices
 from validation.validation import validate_command, validate_channel
@@ -15,7 +15,7 @@ def start_bottle(self_port):
     # Create device
     ################################################################################################
 
-    _device = tivo()
+    _device = Virginmedia_tivo()
 
     log_internal(True, 'Device object created', desc='success')
 

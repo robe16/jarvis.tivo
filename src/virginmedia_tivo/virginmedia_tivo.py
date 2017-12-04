@@ -14,8 +14,8 @@ from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_detai
 # Issue with IDE and production running of script - resolved with try/except below
 try:
     # IDE
-    from tivo.commands import commands
-    from tivo.channels_functions import get_channel_name_from_key, get_channel_details_from_key, get_channel_key_from_name
+    from virginmedia_tivo.commands import commands
+    from virginmedia_tivo.channels_functions import get_channel_name_from_key, get_channel_details_from_key, get_channel_key_from_name
 except:
     # Production
     from commands import commands
@@ -25,7 +25,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
-class tivo():
+class Virginmedia_tivo():
 
     _port = 31339
 
