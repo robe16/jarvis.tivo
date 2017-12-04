@@ -1,0 +1,5 @@
+{
+  "type": "object",
+  "command": {"type" : "string"},
+  "required": ["command"]
+}
