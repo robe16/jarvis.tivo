@@ -1,5 +1,5 @@
 serviceName = 'Jarvis: TiVo'
-serviceType = 'tivo'
+serviceType = 'virginmedia_tivo'
 
 logFileNameTimeformat = '%Y-%m-%d'
 
