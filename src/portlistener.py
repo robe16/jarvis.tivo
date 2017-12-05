@@ -227,6 +227,36 @@ def start_bottle(self_port):
             raise HTTPError(status)
 
     ################################################################################################
+    # Pin
+    ################################################################################################
+
+    @post(uri_enterpin)
+    def post_enterpin():
+        #
+        try:
+            client = request.headers[service_header_clientid_label]
+        except:
+            client = request['REMOTE_ADDR']
+        #
+        try:
+            #
+            r = _device.sendPin()
+            #
+            if not bool(r):
+                status = httpStatusFailure
+            else:
+                status = httpStatusSuccess
+            #
+            log_inbound(False, client, request.url, 'POST', status)
+            #
+            return HTTPResponse(status=status)
+            #
+        except Exception as e:
+            status = httpStatusServererror
+            log_inbound(False, client, request.url, 'POST', status, exception=e)
+            raise HTTPError(status)
+
+    ################################################################################################
 
     host='0.0.0.0'
     log_internal(True, 'Port listener', desc='started')

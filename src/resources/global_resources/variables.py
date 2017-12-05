@@ -27,6 +27,7 @@ uri_commands = '/commands'
 uri_command = '/command'
 uri_channel = '/channel'
 uri_recordings = '/recordings'
+uri_enterpin = '/enterpin'
 
 service_header_clientid_label = 'jarvis.client-service'
 
