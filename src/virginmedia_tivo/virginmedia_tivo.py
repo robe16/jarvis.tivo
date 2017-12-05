@@ -259,7 +259,8 @@ class Virginmedia_tivo():
                     'timestamp': self.recordings_timestamp.strftime('%d/%m/%Y %H:%M')}
         except Exception as e:
             # TODO - log entry
-            return False
+            return {'recordings': False,
+                    'timestamp': 'n/a'}
 
     def getChan(self):
         #
