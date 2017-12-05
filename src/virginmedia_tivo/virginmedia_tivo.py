@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import time
 import xml.etree.ElementTree as ET
 import telnetlib
@@ -6,7 +6,6 @@ import requests as requests
 from requests.auth import HTTPDigestAuth
 from multiprocessing import Manager, Process
 
-from resources.global_resources.variables import *
 from parameters import recordings_check_period
 from log.log import log_outbound
 from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_details_pin
@@ -54,7 +53,7 @@ class Virginmedia_tivo():
     def _check_recordings(self, loop=0):
         if loop > 1:
             return
-        if self.recordings_timestamp == 0 or datetime.datetime.now() > (self.recordings_timestamp + datetime.timedelta(minutes=recordings_check_period)):
+        if self.recordings_timestamp == 0 or datetime.now() > (self.recordings_timestamp + timedelta(minutes=recordings_check_period)):
             self.get_recordings()
             loop += 1
             self._check_recordings(loop=loop)
@@ -102,7 +101,7 @@ class Virginmedia_tivo():
             #
             ############
             #
-            self.recordings_timestamp = datetime.datetime.now()
+            self.recordings_timestamp = datetime.now()
             self.recordings = self._create_recordings_json(self.recordings_timestamp, xml_folders, xml_files)
             #
             ############
@@ -169,7 +168,7 @@ class Virginmedia_tivo():
                             #
                             try:
                                 date = int(itemFile.find('CaptureDate').text, 0)
-                                date = datetime.datetime.fromtimestamp(date)
+                                date = datetime.fromtimestamp(date)
                                 json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
                                     'recordingDate'] = date.strftime('%d-%m-%Y')
                             except Exception as e:
@@ -255,7 +254,9 @@ class Virginmedia_tivo():
     def getRecordings(self):
         try:
             self._check_recordings()
-            return self.recordings
+            #
+            return {'recordings': self.recordings,
+                    'timestamp': self.recordings_timestamp.strftime('%d/%m/%Y %H:%M')}
         except Exception as e:
             # TODO - log entry
             return False
