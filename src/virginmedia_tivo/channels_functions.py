@@ -20,6 +20,7 @@ def get_channel_name_from_key(key):
     #
     return False
 
+
 def get_channel_details_from_key(key):
     for chan in channels:
         if channels[chan]['sd']:
@@ -31,6 +32,7 @@ def get_channel_details_from_key(key):
     #
     return False
 
+
 def get_channel_key_from_name(name):
     #
     if name in channels.keys():
@@ -39,20 +41,37 @@ def get_channel_key_from_name(name):
         #
         # Do HD first as preference
         if channels[name]['hd']:
-            if _check_package(name, 'hd', package):
+            if check_package(name, 'hd', package):
                 return channels[name]['hd']['key']
         #
         # If HD does not yield results, fall back to SD
         if channels[name]['sd']:
-            if _check_package(name, 'sd', package):
+            if check_package(name, 'sd', package):
                 return channels[name]['sd']['key']
     #
     return False
 
-def _check_package(name, quality, package):
-    chan_package = channels[name][quality]['package']
-    for p in package:
-        if p in chan_package:
-            return True
+
+def get_channels(package):
+        #
+        chans = []
+        #
+        for chan in channels:
+            #
+            c = {chan: {'sd': check_package(chan, 'sd', package),
+                        'hd': check_package(chan, 'hd', package)}
+                 }
+            #
+            chans.append(c)
+        #
+        return {'channels': chans}
+
+
+def check_package(name, quality, package):
+    if channels[name][quality]:
+        chan_package = channels[name][quality]['package']
+        for p in package:
+            if p in chan_package:
+                return True
     #
     return False

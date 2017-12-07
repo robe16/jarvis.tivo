@@ -8,16 +8,20 @@ from multiprocessing import Manager, Process
 
 from parameters import recordings_check_period
 from log.log import log_outbound
-from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_details_pin
+from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_details_pin, get_cfg_details_package
 
 # Issue with IDE and production running of script - resolved with try/except below
 try:
     # IDE
     from virginmedia_tivo.commands import commands
+    from virginmedia_tivo.channels import channels
+    from virginmedia_tivo.channels_functions import get_channels
     from virginmedia_tivo.channels_functions import get_channel_name_from_key, get_channel_details_from_key, get_channel_key_from_name
 except:
     # Production
     from commands import commands
+    from channels import channels
+    from channels_functions import get_channels
     from channels_functions import get_channel_name_from_key, get_channel_details_from_key, get_channel_key_from_name
 
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -116,8 +120,6 @@ class Virginmedia_tivo():
     def _create_recordings_json(self, _timestamp, _folders, _files):
         #
         json_recordings = {}
-        json_recordings["recordings"] = {}
-        json_recordings["timestamp"] = _timestamp.strftime('%d/%m/%Y %H:%M:%S')
 
         #
         if len(_folders) == 0 or len(_files) == 0:
@@ -128,11 +130,11 @@ class Virginmedia_tivo():
             folderCount = 0
             for itemFolder in _folders:
                 if itemFolder.find('Title').text != 'Suggestions' and itemFolder.find('Title').text != 'HD Recordings':
-                    json_recordings['recordings'][str(folderCount)] = {}
-                    json_recordings['recordings'][str(folderCount)]['folderName'] = itemFolder.find('Title').text
-                    json_recordings['recordings'][str(folderCount)]['type'] = '-'
+                    json_recordings[str(folderCount)] = {}
+                    json_recordings[str(folderCount)]['folderName'] = itemFolder.find('Title').text
+                    json_recordings[str(folderCount)]['type'] = '-'
                     #
-                    json_recordings['recordings'][str(folderCount)]['items'] = {}
+                    json_recordings[str(folderCount)]['items'] = {}
                     #
                     # Run through individual items
                     itemCount = 0
@@ -140,68 +142,52 @@ class Virginmedia_tivo():
                         #
                         if itemFile.find('Title').text == itemFolder.find('Title').text:
                             #
-                            json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)] = {}
+                            json_recordings[str(folderCount)]['items'][str(itemCount)] = {}
                             #
                             try:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'episodeTitle'] = itemFile.find('EpisodeTitle').text
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeTitle'] = itemFile.find('EpisodeTitle').text
                             except Exception as e:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'episodeTitle'] = ''
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeTitle'] = ''
                             #
-                            json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel'] = {}
+                            json_recordings[str(folderCount)]['items'][str(itemCount)]['channel'] = {}
                             #
                             try:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel'][
-                                    'name'] = get_channel_name_from_key(int(itemFile.find('SourceChannel').text))
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = get_channel_name_from_key(int(itemFile.find('SourceChannel').text))
                             except Exception as e:
                                 print (int(itemFile.find('SourceChannel').text))
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel'][
-                                    'name'] = '-'
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = '-'
                             #
                             try:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'description'] = itemFile.find('Description').text
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['description'] = itemFile.find('Description').text
                             except Exception as e:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'description'] = ''
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['description'] = ''
                             #
                             try:
                                 date = int(itemFile.find('CaptureDate').text, 0)
                                 date = datetime.fromtimestamp(date)
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'recordingDate'] = date.strftime('%d-%m-%Y')
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['recordingDate'] = date.strftime('%d-%m-%Y')
                             except Exception as e:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'recordingDate'] = '-'
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['recordingDate'] = '-'
                             #
-                            json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                'episodeNumber'] = {}
+                            json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeNumber'] = {}
                             #
                             try:
                                 episodenumber = itemFile.find('EpisodeNumber').text
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'episodeNumber']['series'] = episodenumber[:-2]
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'episodeNumber']['episode'] = episodenumber[-2:]
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeNumber']['series'] = episodenumber[:-2]
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeNumber']['episode'] = episodenumber[-2:]
                             except:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'episodeNumber']['series'] = ''
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'episodeNumber']['episode'] = ''
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeNumber']['series'] = ''
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['episodeNumber']['episode'] = ''
                             #
                             try:
                                 if itemFile.find('ProgramId').text.startswith('EP'):
-                                    json_recordings['recordings'][str(folderCount)]['type'] = 'tv'
-                                    json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                        'mpaaRating'] = ''
+                                    json_recordings[str(folderCount)]['type'] = 'tv'
+                                    json_recordings[str(folderCount)]['items'][str(itemCount)]['mpaaRating'] = ''
                                 elif itemFile.find('ProgramId').text.startswith('MV'):
-                                    json_recordings['recordings'][str(folderCount)]['type'] = 'movie'
-                                    json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                        'mpaaRating'] = itemFile.find('MpaaRating').text
+                                    json_recordings[str(folderCount)]['type'] = 'movie'
+                                    json_recordings[str(folderCount)]['items'][str(itemCount)]['mpaaRating'] = itemFile.find('MpaaRating').text
                             except:
-                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)][
-                                    'mpaaRating'] = ''
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['mpaaRating'] = ''
                                 #
                             itemCount += 1
                 #
@@ -290,7 +276,7 @@ class Virginmedia_tivo():
         #
         cmds = []
         #
-        for c in commands['commands']:
+        for c in commands:
             cmds.append(c)
         #
         return {'commands': cmds}
@@ -306,6 +292,13 @@ class Virginmedia_tivo():
                 rsp.append(self._send_telnet(get_cfg_details_ip(), self._port, data=code))
                 #TODO - log entry
             return not (False in rsp)
+        except Exception as e:
+            # TODO - log entry
+            return False
+
+    def getChannels(self):
+        try:
+            return get_channels(get_cfg_details_package)
         except Exception as e:
             # TODO - log entry
             return False

@@ -126,6 +126,39 @@ def start_bottle(self_port):
             raise HTTPError(status)
 
     ################################################################################################
+    # Get channel
+    ################################################################################################
+
+    @get(uri_channels)
+    def get_channels():
+        #
+        try:
+            client = request.headers[service_header_clientid_label]
+        except:
+            client = request['REMOTE_ADDR']
+        #
+        try:
+            #
+            r = _device.getChannels()
+            #
+            if not bool(r):
+                status = httpStatusFailure
+            else:
+                status = httpStatusSuccess
+            #
+            log_inbound(False, client, request.url, 'GET', status)
+            #
+            if isinstance(r, bool):
+                return HTTPResponse(status=status)
+            else:
+                return HTTPResponse(body=r, status=status)
+            #
+        except Exception as e:
+            status = httpStatusServererror
+            log_inbound(False, client, request.url, 'GET', status, exception=e)
+            raise HTTPError(status)
+
+    ################################################################################################
     # Post channel
     ################################################################################################
 
