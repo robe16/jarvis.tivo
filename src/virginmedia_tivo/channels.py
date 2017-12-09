@@ -1,5 +1,5 @@
-channels = {"BBC ONE": {"sd": {"key":101, "package": ["Player", "Mix", "Full House", "VIP"]},
-                        "hd": {"key":108, "package": ["Player", "Mix", "Full House", "VIP"]}},
+channels = {"BBC ONE": {"sd": {"key": 101, "package": ["Player", "Mix", "Full House", "VIP"]},
+                        "hd": {"key": 108, "package": ["Player", "Mix", "Full House", "VIP"]}},
             "BBC TWO": {"sd": {"key": 102, "package": ["Player", "Mix", "Full House", "VIP"]},
                         "hd": {"key": 162, "package": ["Player", "Mix", "Full House", "VIP"]}},
             "ITV": {"sd": {"key": 103, "package": ["Player", "Mix", "Full House", "VIP"]},
