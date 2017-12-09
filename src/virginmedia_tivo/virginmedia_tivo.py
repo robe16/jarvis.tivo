@@ -152,9 +152,11 @@ class Virginmedia_tivo():
                             json_recordings[str(folderCount)]['items'][str(itemCount)]['channel'] = {}
                             #
                             try:
-                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = get_channel_name_from_key(int(itemFile.find('SourceChannel').text))
+                                c = get_channel_details_from_key(int(itemFile.find('SourceChannel').text))
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = c['name']
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = c['quality']
                             except Exception as e:
-                                print (int(itemFile.find('SourceChannel').text))
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = '-'
                                 json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = '-'
                             #
                             try:
