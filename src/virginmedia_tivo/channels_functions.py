@@ -19,7 +19,7 @@ def get_channel_name_from_key(key):
             if channels[chan]['sd']:
                 if channels[chan]['sd']['key'] == k:
                     return chan
-            elif channels[chan]['hd']:
+            if channels[chan]['hd']:
                 if channels[chan]['hd']['key'] == k:
                     return chan
         #
@@ -36,7 +36,7 @@ def get_channel_details_from_key(key):
             if channels[chan]['sd']:
                 if channels[chan]['sd']['key'] == key:
                     return {'name': chan, 'quality': 'sd'}
-            elif channels[chan]['hd']:
+            if channels[chan]['hd']:
                 if channels[chan]['hd']['key'] == key:
                     return {'name': chan, 'quality': 'hd'}
         #
