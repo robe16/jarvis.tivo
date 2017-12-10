@@ -1,3 +1,4 @@
+# Pacakges and channel numbers correct as of *10th December 2017*
 channels = {"BBC ONE": {"sd": {"key": 101, "package": ["Player", "Mix", "Full House", "VIP"]},
                         "hd": {"key": 108, "package": ["Player", "Mix", "Full House", "VIP"]}},
             "BBC TWO": {"sd": {"key": 102, "package": ["Player", "Mix", "Full House", "VIP"]},
