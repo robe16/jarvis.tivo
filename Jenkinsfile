@@ -76,7 +76,7 @@ node {
             } catch(error) {
                 echo "No ${docker_img_tar} file to remove."
             }
-            sh "docker save -o ~/${docker_img_tar} ${docker_img_name_build_id}"                               // create tar file of image
+            sh "docker save -o ~/${docker_img_tar} ${docker_img_name_build_id}"                             // create tar file of image
             sh "scp -v -o StrictHostKeyChecking=no ~/${docker_img_tar} ${deployLogin}:~"                    // xfer tar to deploy server
             sh "ssh -o StrictHostKeyChecking=no ${deployLogin} \"docker load -i ~/${docker_img_tar}\""      // load tar into deploy server registry
             sh "ssh -o StrictHostKeyChecking=no ${deployLogin} \"rm ~/${docker_img_tar}\""                  // remove the tar file from deploy server
