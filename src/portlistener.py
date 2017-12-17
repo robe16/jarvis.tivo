@@ -7,6 +7,7 @@ from resources.global_resources.variables import *
 from config.config import get_cfg_serviceid, get_cfg_name_long, get_cfg_name_short, get_cfg_groups, get_cfg_subservices
 from validation.validation import validate_command, validate_channel
 from log.log import log_inbound, log_internal
+from resources.enGB.logs import *
 
 
 def start_bottle(self_port):
@@ -17,7 +18,7 @@ def start_bottle(self_port):
 
     _device = Virginmedia_tivo()
 
-    log_internal(True, 'Device object created', desc='success')
+    log_internal(True, logDescDeviceObjectCreation, desc='success')
 
     ################################################################################################
     # Enable cross domain scripting
@@ -292,5 +293,5 @@ def start_bottle(self_port):
     ################################################################################################
 
     host='0.0.0.0'
-    log_internal(True, 'Port listener', desc='started')
+    log_internal(True, logDescPortListener.format(port=self_port), desc='started')
     run(host=host, port=self_port, debug=True)

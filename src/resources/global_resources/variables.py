@@ -1,11 +1,6 @@
 serviceName = 'Jarvis: TiVo'
 serviceType = 'virginmedia_tivo'
 
-logDescDeviceGetrecordings = 'Get recordings'
-logDescDeviceGetcurrentchannel = 'Get current channel'
-logDescDeviceSendchannel = 'Send channel'
-logDescDeviceSendcommand = 'Send command'
-
 uri_config = '/config'
 uri_commands = '/commands'
 uri_command = '/command'
