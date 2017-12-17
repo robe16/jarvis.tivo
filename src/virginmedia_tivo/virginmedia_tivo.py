@@ -6,8 +6,9 @@ import requests as requests
 from requests.auth import HTTPDigestAuth
 from multiprocessing import Manager, Process
 
+from resources.lang.enGB.logs import *
 from parameters import recordings_check_period
-from log.log import log_outbound
+from log.log import log_outbound, log_internal
 from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_details_pin, get_cfg_details_package
 
 # Issue with IDE and production running of script - resolved with try/except below
@@ -110,10 +111,10 @@ class Virginmedia_tivo():
             #
             ############
             #
-            #TODO - log entry
+            log_internal(True, logDescDeviceGetRecordings)
             #
         except Exception as e:
-            #TODO - log entry
+            log_internal(False, logDescDeviceGetRecordings, exception=e)
             self.recordings_timestamp = 0
             self.recordings = False
 
@@ -198,7 +199,7 @@ class Virginmedia_tivo():
             return json_recordings
             #
         except Exception as e:
-            #TODO - log entry
+            log_internal(False, logDescDeviceCreateRecordingsHtml, exception=e)
             return False
 
     def _retrieve_recordings(self, recurse, itemCount=''):
@@ -209,8 +210,9 @@ class Virginmedia_tivo():
         try:
             #
             r = self.tivoSession.get('{url}{uri}'.format(url=url, uri=uri))
+            r_pass = True if r.status_code == requests.codes.ok else False
             #
-            # TODO - log entry
+            log_outbound(r_pass, get_cfg_details_ip(), uri, 'GET', r.status_code)
             #
             if r.status_code == requests.codes.ok:
                 return r.content
@@ -235,8 +237,8 @@ class Virginmedia_tivo():
                     output = op if (response and not bool(op)) else True
             tn.close()
             return output
-        except:
-            # TODO - log entry
+        except Exception as e:
+            log_outbound(False, '{ip}:{port}'.format(ip=ipaddress, port=port), '', 'TELNET', '-', desc=data, exception=e)
             return False
 
     def getRecordings(self):
@@ -246,7 +248,7 @@ class Virginmedia_tivo():
             return {'recordings': self.recordings,
                     'timestamp': self.recordings_timestamp.strftime('%d/%m/%Y %H:%M')}
         except Exception as e:
-            # TODO - log entry
+            log_internal(False, logDescDeviceGetRecordings, exception=e)
             return {'recordings': False,
                     'timestamp': 'n/a'}
 
@@ -276,12 +278,16 @@ class Virginmedia_tivo():
 
     def getCommands(self):
         #
-        cmds = []
-        #
-        for c in commands:
-            cmds.append(c)
-        #
-        return {'commands': cmds}
+        try:
+            cmds = []
+            #
+            for c in commands:
+                cmds.append(c)
+            #
+            return {'commands': cmds}
+        except Exception as e:
+            log_internal(False, logDescDeviceGetCommand, exception=e)
+            return {'commands': []}
 
     def sendPin(self):
         #
@@ -292,17 +298,19 @@ class Virginmedia_tivo():
             for num in pin:
                 code = commands[num]
                 rsp.append(self._send_telnet(get_cfg_details_ip(), self._port, data=code))
-                #TODO - log entry
+            log_internal(not (False in rsp), logDescDeviceSendPin)
             return not (False in rsp)
         except Exception as e:
-            # TODO - log entry
+            log_internal(False, logDescDeviceSendPin, exception=e)
             return False
 
     def getChannels(self):
         try:
-            return get_channels(get_cfg_details_package)
+            r_pass = get_channels(get_cfg_details_package)
+            log_internal(r_pass, logDescDeviceSendChannel)
+            return r_pass
         except Exception as e:
-            # TODO - log entry
+            log_internal(False, logDescDeviceGetChannelsForPackage, exception=e)
             return False
 
     def sendChannel(self, chan_name):
@@ -313,16 +321,20 @@ class Virginmedia_tivo():
                                          data=("SETCH {chan_key}\r").format(chan_key=chan_key),
                                          response=True)
             if response.startswith('CH_FAILED'):
+                log_internal(True, logDescDeviceSendChannel)
                 return False
             else:
+                log_internal(False, logDescDeviceSendChannel)
                 return True
         except Exception as e:
-            # TODO - log entry
+            log_internal(False, logDescDeviceSendChannel, exception=e)
             return False
 
     def sendCmd(self, command):
         try:
-            return self._send_telnet(get_cfg_details_ip(), self._port, data=commands[command])
-        except:
-            # TODO - log entry
+            r_pass = self._send_telnet(get_cfg_details_ip(), self._port, data=commands[command])
+            log_internal(r_pass, logDescDeviceSendCommand)
+            return r_pass
+        except Exception as e:
+            log_internal(False, logDescDeviceSendCommand, exception=e)
             return False
