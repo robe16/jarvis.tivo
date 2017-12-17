@@ -13,3 +13,4 @@ logDescDeviceGetrecordings = 'Get recordings'
 logDescDeviceGetcurrentchannel = 'Get current channel'
 logDescDeviceSendchannel = 'Send channel'
 logDescDeviceSendcommand = 'Send command'
+
