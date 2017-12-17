@@ -1,11 +1,10 @@
 import sys
 from multiprocessing import Process
-from discovery.broadcast import broadcast_service
-from portlistener import start_bottle
-from config.config import get_cfg_serviceid
-from log.log import log_internal, set_logfile
-from resources.enGB.logs import *
 
+from config.config import get_cfg_serviceid
+from discovery.broadcast import broadcast_service
+from log.log import log_internal, set_logfile
+from portlistener import start_bottle
 
 try:
 

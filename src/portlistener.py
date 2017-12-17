@@ -2,12 +2,11 @@ from bottle import HTTPError
 from bottle import get, post
 from bottle import request, run, HTTPResponse
 
-from virginmedia_tivo.virginmedia_tivo import Virginmedia_tivo
-from resources.global_resources.variables import *
 from config.config import get_cfg_serviceid, get_cfg_name_long, get_cfg_name_short, get_cfg_groups, get_cfg_subservices
-from validation.validation import validate_command, validate_channel
 from log.log import log_inbound, log_internal
-from resources.enGB.logs import *
+from resources.global_resources.variables import *
+from validation.validation import validate_command, validate_channel
+from virginmedia_tivo.virginmedia_tivo import Virginmedia_tivo
 
 
 def start_bottle(self_port):

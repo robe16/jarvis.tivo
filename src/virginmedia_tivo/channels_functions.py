@@ -1,6 +1,5 @@
 from config.config import get_cfg_details_package
 from log.log import log_internal
-from resources.enGB.logs import *
 
 # Issue with IDE and production running of script - resolved with try/except below
 try:
