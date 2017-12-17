@@ -1,6 +1,7 @@
 import sys
 from multiprocessing import Process
 
+from resources.lang.enGB.logs import *
 from config.config import get_cfg_serviceid
 from discovery.broadcast import broadcast_service
 from log.log import log_internal, set_logfile
