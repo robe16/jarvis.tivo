@@ -3,6 +3,7 @@ from time import sleep
 
 from log.log import log_internal
 from parameters import broadcast_frequency
+from resources.lang.enGB.logs import *
 from resources.global_resources.broadcast import *
 from resources.global_resources.variables import serviceType
 
