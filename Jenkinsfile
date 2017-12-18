@@ -1,7 +1,7 @@
 echo "Running Build ID: ${env.BUILD_ID}"
 
-string githubUrl
-String appName
+string githubUrl = "https://github.com/robe16/jarvis.virginmedia_tivo.git"
+String appName = "jarvis.virginmedia_tivo"
 String build_args
 String deployLogin
 String docker_img_name
@@ -30,9 +30,6 @@ node {
         string(name: 'folderLog',
                description: 'Location of log directory on host device',
                defaultValue: '*')
-        //
-        githubUrl = "https://github.com/robe16/jarvis.virginmedia_tivo.git"
-        appName = "jarvis.virginmedia_tivo"
         //
         build_args = ["--build-arg portApplication=${portApplication}"].join(" ")
         //
