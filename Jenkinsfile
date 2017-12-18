@@ -31,8 +31,8 @@ node {
                description: 'Location of log directory on host device',
                defaultValue: '*')
         //
-        githubUrl = 'https://github.com/robe16/jarvis.virginmedia_tivo.git'
-        appName = 'jarvis.virginmedia_tivo'
+        githubUrl = "https://github.com/robe16/jarvis.virginmedia_tivo.git"
+        appName = "jarvis.virginmedia_tivo"
         //
         build_args = ["--build-arg portApplication=${portApplication}"].join(" ")
         //
