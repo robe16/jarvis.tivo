@@ -2,7 +2,6 @@ echo "Running Build ID: ${env.BUILD_ID}"
 
 string githubUrl
 String appName
-String commit_id
 String build_args
 String deployLogin
 String docker_img_name
