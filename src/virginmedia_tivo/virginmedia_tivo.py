@@ -7,23 +7,14 @@ from requests.auth import HTTPDigestAuth
 from multiprocessing import Manager, Process
 
 from resources.lang.enGB.logs import *
+from resources.global_resources.log_vars import logPass, logFail, logException
 from parameters import recordings_check_period
 from log.log import log_outbound, log_internal
 from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_details_pin, get_cfg_details_package
 
-# Issue with IDE and production running of script - resolved with try/except below
-try:
-    # IDE
-    from virginmedia_tivo.commands import commands
-    from virginmedia_tivo.channels import channels
-    from virginmedia_tivo.channels_functions import get_channels
-    from virginmedia_tivo.channels_functions import get_channel_name_from_key, get_channel_details_from_key, get_channel_key_from_name
-except:
-    # Production
-    from commands import commands
-    from channels import channels
-    from channels_functions import get_channels
-    from channels_functions import get_channel_name_from_key, get_channel_details_from_key, get_channel_key_from_name
+from commands import commands
+from channels_functions import get_channels
+from channels_functions import get_channel_details_from_key, get_channel_key_from_name
 
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -111,10 +102,10 @@ class Virginmedia_tivo():
             #
             ############
             #
-            log_internal(True, logDescDeviceGetRecordings)
+            log_internal(logPass, logDescDeviceGetRecordings)
             #
         except Exception as e:
-            log_internal(False, logDescDeviceGetRecordings, exception=e)
+            log_internal(logException, logDescDeviceGetRecordings, exception=e)
             self.recordings_timestamp = 0
             self.recordings = False
 
@@ -199,7 +190,7 @@ class Virginmedia_tivo():
             return json_recordings
             #
         except Exception as e:
-            log_internal(False, logDescDeviceCreateRecordingsHtml, exception=e)
+            log_internal(logException, logDescDeviceCreateRecordingsHtml, exception=e)
             return False
 
     def _retrieve_recordings(self, recurse, itemCount=''):
@@ -212,14 +203,24 @@ class Virginmedia_tivo():
             r = self.tivoSession.get('{url}{uri}'.format(url=url, uri=uri))
             r_pass = True if r.status_code == requests.codes.ok else False
             #
-            log_outbound(r_pass, get_cfg_details_ip(), uri, 'GET', r.status_code)
+            result = logPass if r_pass else logFail
+            #
+            log_outbound(result,
+                         get_cfg_details_ip(), self._port, 'GET', uri,
+                         '-', '-',
+                         r.status_code)
             #
             if r.status_code == requests.codes.ok:
                 return r.content
             else:
                 return False
         except Exception as e:
-            log_outbound(False, url, uri, 'GET', '-', exception=e)
+            #
+            log_outbound(logException,
+                         get_cfg_details_ip(), self._port, 'GET', uri,
+                         '-', '-',
+                         '-',
+                         exception=e)
             return False
 
     def _send_telnet(self, ipaddress, port, data='', response=False):
@@ -238,7 +239,13 @@ class Virginmedia_tivo():
             tn.close()
             return output
         except Exception as e:
-            log_outbound(False, '{ip}:{port}'.format(ip=ipaddress, port=port), '', 'TELNET', '-', desc=data, exception=e)
+            #
+            log_outbound(logException,
+                         get_cfg_details_ip(), self._port, 'TELNET', '',
+                         '-', '-',
+                         '-',
+                         description=data,
+                         exception=e)
             return False
 
     def getRecordings(self):
@@ -248,7 +255,7 @@ class Virginmedia_tivo():
             return {'recordings': self.recordings,
                     'timestamp': self.recordings_timestamp.strftime('%d/%m/%Y %H:%M')}
         except Exception as e:
-            log_internal(False, logDescDeviceGetRecordings, exception=e)
+            log_internal(logException, logDescDeviceGetRecordings, exception=e)
             return {'recordings': False,
                     'timestamp': 'n/a'}
 
@@ -286,7 +293,7 @@ class Virginmedia_tivo():
             #
             return {'commands': cmds}
         except Exception as e:
-            log_internal(False, logDescDeviceGetCommand, exception=e)
+            log_internal(logException, logDescDeviceGetCommand, exception=e)
             return {'commands': []}
 
     def sendPin(self):
@@ -298,19 +305,23 @@ class Virginmedia_tivo():
             for num in pin:
                 code = commands[num]
                 rsp.append(self._send_telnet(get_cfg_details_ip(), self._port, data=code))
-            log_internal(not (False in rsp), logDescDeviceSendPin)
+            #
+            result = logPass if not (False in rsp) else logFail
+            log_internal(result, logDescDeviceSendPin)
             return not (False in rsp)
         except Exception as e:
-            log_internal(False, logDescDeviceSendPin, exception=e)
+            log_internal(logException, logDescDeviceSendPin, exception=e)
             return False
 
     def getChannels(self):
         try:
             r_pass = get_channels(get_cfg_details_package)
-            log_internal(r_pass, logDescDeviceSendChannel)
+            #
+            result = logPass if r_pass else logFail
+            log_internal(result, logDescDeviceGetChannelsForPackage)
             return r_pass
         except Exception as e:
-            log_internal(False, logDescDeviceGetChannelsForPackage, exception=e)
+            log_internal(logException, logDescDeviceGetChannelsForPackage, exception=e)
             return False
 
     def sendChannel(self, chan_name):
@@ -321,20 +332,22 @@ class Virginmedia_tivo():
                                          data=("SETCH {chan_key}\r").format(chan_key=chan_key),
                                          response=True)
             if response.startswith('CH_FAILED'):
-                log_internal(True, logDescDeviceSendChannel)
+                log_internal(logFail, logDescDeviceSendChannel)
                 return False
             else:
-                log_internal(False, logDescDeviceSendChannel)
+                log_internal(logPass, logDescDeviceSendChannel)
                 return True
         except Exception as e:
-            log_internal(False, logDescDeviceSendChannel, exception=e)
+            log_internal(logException, logDescDeviceSendChannel, exception=e)
             return False
 
     def sendCmd(self, command):
         try:
             r_pass = self._send_telnet(get_cfg_details_ip(), self._port, data=commands[command])
-            log_internal(r_pass, logDescDeviceSendCommand)
+            #
+            result = logPass if r_pass else logFail
+            log_internal(result, logDescDeviceSendCommand)
             return r_pass
         except Exception as e:
-            log_internal(False, logDescDeviceSendCommand, exception=e)
+            log_internal(logException, logDescDeviceSendCommand, exception=e)
             return False

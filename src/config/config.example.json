@@ -14,5 +14,9 @@
       "Full House",
       "movies_sky"
     ]
+  },
+  "port": {
+    "broadcast": 1020,
+    "listener": [1021, 1022, 1023, 1024]
   }
 }

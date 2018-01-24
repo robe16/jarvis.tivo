@@ -1,13 +1,8 @@
 from config.config import get_cfg_details_package
+from resources.global_resources.log_vars import logPass, logFail, logException
+from resources.lang.enGB.logs import *
 from log.log import log_internal
-
-# Issue with IDE and production running of script - resolved with try/except below
-try:
-    # IDE
-    from virginmedia_tivo.channels import channels
-except:
-    # Production
-    from channels import channels
+from channels import channels
 
 
 def get_channel_name_from_key(key):
@@ -25,7 +20,7 @@ def get_channel_name_from_key(key):
         #
         return False
     except Exception as e:
-        log_internal(False, logDesChannel_NameFromKey.format(key=key), desc='fail', exception=e)
+        log_internal(logException, logDesChannel_NameFromKey.format(key=key), description='fail', exception=e)
         return False
 
 
@@ -42,7 +37,7 @@ def get_channel_details_from_key(key):
         #
         return False
     except Exception as e:
-        log_internal(False, logDesChannel_DetailsFromKey.format(key=key), desc='fail', exception=e)
+        log_internal(logException, logDesChannel_DetailsFromKey.format(key=key), description='fail', exception=e)
         return False
 
 
@@ -65,7 +60,7 @@ def get_channel_key_from_name(name):
         #
         return False
     except Exception as e:
-        log_internal(False, logDesChannel_KeyFromName.format(name=name), desc='fail', exception=e)
+        log_internal(logException, logDesChannel_KeyFromName.format(name=name), description='fail', exception=e)
         return False
 
 
@@ -85,7 +80,7 @@ def get_channels(package):
         #
         return {'channels': chans}
     except Exception as e:
-        log_internal(False, logDesChannel_ListFromPackage.format(package=package), desc='fail', exception=e)
+        log_internal(logException, logDesChannel_ListFromPackage.format(package=package), description='fail', exception=e)
         return False
 
 

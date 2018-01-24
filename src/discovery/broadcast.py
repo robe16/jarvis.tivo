@@ -5,6 +5,7 @@ from log.log import log_internal
 from parameters import broadcast_frequency
 from resources.lang.enGB.logs import *
 from resources.global_resources.broadcast import *
+from resources.global_resources.log_vars import logException
 from resources.global_resources.variables import serviceType
 
 
@@ -23,4 +24,4 @@ def broadcast_service(service_id, self_port):
             sleep(broadcast_frequency)
         #
     except Exception as e:
-        log_internal(True, logDesc_services_Broadcast, desc='fail', exception=e)
+        log_internal(logException, logDesc_services_Broadcast, exception=e)

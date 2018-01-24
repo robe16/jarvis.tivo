@@ -24,9 +24,6 @@ node {
         string(name: 'deploymentUsername',
                description: 'Username for the server the Docker container will be deployed to (used for ssh/scp)',
                defaultValue: '*')
-        string(name: 'portApplication',
-               description: 'Port number used by application to expose APIs on',
-               defaultValue: '*')
         string(name: 'fileConfig',
                description: 'Location of config file on host device',
                defaultValue: '*')
@@ -34,7 +31,7 @@ node {
                description: 'Location of log directory on host device',
                defaultValue: '*')
         //
-        build_args = ["--build-arg portApplication=${portApplication}"].join(" ")
+        build_args = [""].join(" ")
         //
         //
         docker_volumes = ["-v ${params.fileConfig}:/jarvis/${serviceType}/config/config.json",
@@ -45,7 +42,7 @@ node {
         //
     }
 
-    if (params["serviceID"]!="*" && params["deploymentServer"]!="*" && params["deploymentUsername"]!="*" && params["portMapped_broadcast"]!="*" && params["portMapped_application"]!="*" && params["fileConfig"]!="*" && params["folderLog"]!="*") {
+    if (params["serviceID"]!="*" && params["deploymentServer"]!="*" && params["deploymentUsername"]!="*" && params["fileConfig"]!="*" && params["folderLog"]!="*") {
 
         stage("checkout") {
             git url: "${githubUrl}"
@@ -85,7 +82,6 @@ node {
             sh "ssh ${deployLogin} \"docker rm -f ${params.serviceID} && echo \"container ${params.serviceID} removed\" || echo \"container ${params.serviceID} does not exist\"\""
             // Start new container
             sh "ssh ${deployLogin} \"docker run --restart unless-stopped -d ${docker_volumes} --net=host --name ${params.serviceID} ${docker_img_name_latest}\""
-            //sh "ssh ${deployLogin} \"docker run --restart unless-stopped -d ${docker_volumes} ${docker_port_mapping} --name ${params.serviceID} ${docker_img_name_latest}\""
         }
 
     } else {
