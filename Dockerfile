@@ -2,7 +2,8 @@ FROM resin/rpi-raspbian:latest
 MAINTAINER robe16
 
 # Update
-RUN apt-get update && apt-get install -y python python-pip
+RUN apt-get update \
+    && apt-get install -y python3 python3-pip
 
 WORKDIR /jarvis/virginmedia_tivo
 
@@ -13,7 +14,7 @@ COPY src /jarvis/virginmedia_tivo
 COPY requirements.txt requirements.txt
 
 # Install app dependencies
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Run application
-CMD python run.py
+CMD python3 run.py
