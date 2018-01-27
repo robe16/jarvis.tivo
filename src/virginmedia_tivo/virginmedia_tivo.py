@@ -16,9 +16,8 @@ from virginmedia_tivo.commands import commands
 from virginmedia_tivo.channels_functions import get_channels
 from virginmedia_tivo.channels_functions import get_channel_details_from_key, get_channel_key_from_name
 
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class Virginmedia_tivo():
 
