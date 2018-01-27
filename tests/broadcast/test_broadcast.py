@@ -1,6 +1,6 @@
 from multiprocessing import Process
 from socket import socket, AF_INET, SOCK_DGRAM, gethostbyname, gethostname
-from src.resources.global_resources.variables import jarvis_broadcastPort, jarvis_broadcast_msg
+from src.resources.global_resources.broadcast import jarvis_broadcastPort, jarvis_broadcast_msg
 from src.discovery.broadcast import broadcast_service
 from tests.broadcast.testlist import testlist
 
