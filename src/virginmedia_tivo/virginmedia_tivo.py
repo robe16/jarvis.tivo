@@ -63,7 +63,8 @@ class Virginmedia_tivo():
             #
             ############
             #
-            folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"', '')
+            folders = self._retrieve_recordings('No')
+            folders = folders.replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"', '')
             folders = ET.fromstring(folders)
             xml_folders = []
             for item in folders.iter('Item'):
@@ -210,7 +211,10 @@ class Virginmedia_tivo():
                          r.status_code)
             #
             if r.status_code == requests.codes.ok:
-                return r.content
+                try:
+                    return r.content.decode()
+                except:
+                    return r.content
             else:
                 return False
         except Exception as e:
@@ -228,7 +232,7 @@ class Virginmedia_tivo():
             time.sleep(0.1)
             output = tn.read_eager() if response else None
             if data:
-                tn.write(str(data) + "\n")
+                tn.write((str(data) + "\n").encode('ascii'))
                 time.sleep(0.1)
                 op = tn.read_eager()
                 if op == '':
