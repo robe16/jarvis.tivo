@@ -2,7 +2,8 @@ logDescStartingService = 'Starting micro service'
 logDescPortListener = 'Port listener - {port}'
 logDescDeviceObjectCreation = 'Device object creation'
 
-logDesc_services_Broadcast = 'Broadcast of services'
+logDesc_services_Broadcast = 'Broadcast of service'
+logDesc_Broadcast = 'Broadcasting message'
 
 logDesChannel_NameFromKey = 'Attempted get channel name from key - \'{key}\''
 logDesChannel_DetailsFromKey = 'Attempted get channel details from key - \'{key}\''
