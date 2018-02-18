@@ -2,7 +2,7 @@ from config.config import get_cfg_details_package
 from resources.global_resources.log_vars import logPass, logFail, logException
 from resources.lang.enGB.logs import *
 from log.log import log_internal
-from virginmedia_tivo.channels import channels
+from service.channels import channels
 
 
 def get_channel_name_from_key(key):

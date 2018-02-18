@@ -12,9 +12,9 @@ from parameters import recordings_check_period
 from log.log import log_outbound, log_internal
 from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_details_pin, get_cfg_details_package
 
-from virginmedia_tivo.commands import commands
-from virginmedia_tivo.channels_functions import get_channels
-from virginmedia_tivo.channels_functions import get_channel_details_from_key, get_channel_key_from_name
+from service.commands import commands
+from service.channels_functions import get_channels
+from service.channels_functions import get_channel_details_from_key, get_channel_key_from_name
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

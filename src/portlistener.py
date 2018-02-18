@@ -10,7 +10,7 @@ from resources.lang.enGB.logs import *
 from resources.global_resources.variables import *
 from resources.global_resources.log_vars import logPass, logFail, logException
 from validation.validation import validate_command, validate_channel
-from virginmedia_tivo.virginmedia_tivo import Virginmedia_tivo
+from service.virginmedia_tivo import Virginmedia_tivo
 from log.log import log_inbound, log_internal
 
 
