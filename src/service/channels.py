@@ -265,7 +265,7 @@ channels = {"BBC ONE": {"sd": {"key": 101, "package": ["Player", "Mix", "Full Ho
                                   "hd": False},
             "Discovery History +1": {"sd": {"key": 263, "package": ["Full House", "VIP"]},
                                      "hd": False},
-            "Nat Geo Wild": {"sd": {"key": False, "264": ["Full House", "VIP"]},
+            "Nat Geo Wild": {"sd": {"key": 264, "package": ["Full House", "VIP"]},
                              "hd": {"key": 265, "package": ["Full House", "VIP"]}},
             "National Geographic": {"sd": {"key": 266, "package": ["Full House", "VIP"]},
                                     "hd": {"key": 268, "package": ["Full House", "VIP"]}},

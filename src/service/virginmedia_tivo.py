@@ -318,7 +318,7 @@ class Virginmedia_tivo():
 
     def getChannels(self):
         try:
-            r_pass = get_channels(get_cfg_details_package)
+            r_pass = get_channels(get_cfg_details_package())
             #
             result = logPass if r_pass else logFail
             log_internal(result, logDescDeviceGetChannelsForPackage)

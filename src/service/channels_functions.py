@@ -66,22 +66,18 @@ def get_channel_key_from_name(name):
 
 def get_channels(package):
     #
-    try:
+    chans = {}
+    #
+    for chan in channels:
         #
-        chans = []
-        #
-        for chan in channels:
+        try:
             #
-            c = {chan: {'sd': check_package(chan, 'sd', package),
-                        'hd': check_package(chan, 'hd', package)}
-                 }
-            #
-            chans.append(c)
-        #
-        return {'channels': chans}
-    except Exception as e:
-        log_internal(logException, logDesChannel_ListFromPackage.format(package=package), description='fail', exception=e)
-        return False
+            chans[chan] = {'sd': check_package(chan, 'sd', package),
+                           'hd': check_package(chan, 'hd', package)}
+        except Exception as e:
+            log_internal(logException, logDesChannel_ListFromPackage.format(package=package), description='fail', exception=e)
+    #
+    return {'channels': chans}
 
 
 def check_package(name, quality, package):
