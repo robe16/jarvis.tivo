@@ -9,14 +9,14 @@ from resources.global_resources.log_vars import logPass
 from service.virginmedia_tivo import Virginmedia_tivo
 from log.log import log_internal
 
-from apis.uri_config import get_config
-from apis.uri_get_commands import get_commands
-from apis.uri_post_command import post_command
-from apis.uri_get_channel import get_channel
-from apis.uri_get_channels import get_channels
-from apis.uri_post_channel import post_channel
-from apis.uri_get_recordings import get_recordings
-from apis.uri_post_enterpin import post_enterpin
+from apis.get_config import get_config
+from apis.get_commands import get_commands
+from apis.post_command import post_command
+from apis.get_channel import get_channel
+from apis.get_channels import get_channels
+from apis.post_channel import post_channel
+from apis.get_recordings import get_recordings
+from apis.post_enterpin import post_enterpin
 
 
 def start_bottle(port_threads):
