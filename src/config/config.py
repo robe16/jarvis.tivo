@@ -68,9 +68,5 @@ def get_cfg_details_package():
     return get_cfg_details()['package']
 
 
-def get_cfg_port_broadcast():
-    return get_config_json()['port']['broadcast']
-
-
-def get_cfg_port_listener():
-    return get_config_json()['port']['listener']
+def get_cfg_port():
+    return get_config_json()['port']
