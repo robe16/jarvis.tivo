@@ -38,40 +38,48 @@ def start_bottle():
     @route('/channels', method=['OPTIONS'])
     @route('/recordings', method=['OPTIONS'])
     @route('/enterpin', method=['OPTIONS'])
-    def api_cors_options():
+    def api_cors_options(**kwargs):
         return response_options()
 
     @get('/config')
     def api_get_config():
-        return get_config(request)
+        response = get_config(request)
+        return response
 
     @get('/commands')
     def api_get_commands():
-        return get_commands(request, _virginmedia_tivo)
+        response = get_commands(request, _virginmedia_tivo)
+        return response
 
     @post('/command')
     def api_post_command():
-        return post_command(request, _virginmedia_tivo)
+        response = post_command(request, _virginmedia_tivo)
+        return response
 
     @get('/channel')
     def api_get_channel():
-        return get_channel(request, _virginmedia_tivo)
+        response = get_channel(request, _virginmedia_tivo)
+        return response
 
     @get('/channels')
     def api_get_channels():
-        return get_channels(request, _virginmedia_tivo)
+        response = get_channels(request, _virginmedia_tivo)
+        return response
 
     @post('/channel')
     def api_post_channel():
-        return post_channel(request, _virginmedia_tivo)
+        response = post_channel(request, _virginmedia_tivo)
+        return response
 
     @get('/recordings')
     def api_get_recordings():
-        return get_recordings(request, _virginmedia_tivo)
+        response = get_recordings(request, _virginmedia_tivo)
+        return response
 
     @post('/enterpin')
     def api_post_enterpin():
-        return post_enterpin(request, _virginmedia_tivo)
+        response = post_enterpin(request, _virginmedia_tivo)
+        return response
 
     ################################################################################################
 
