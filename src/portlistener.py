@@ -1,7 +1,7 @@
-from bottle import get, post
-from bottle import request, run
+from bottle import request, run, route, get, post
 
 from config.config import get_cfg_port
+from common_functions.request_enable_cors import response_options
 from resources.lang.enGB.logs import *
 from resources.global_resources.log_vars import logPass
 from service.virginmedia_tivo import Virginmedia_tivo
@@ -30,6 +30,16 @@ def start_bottle():
     ################################################################################################
     # APIs
     ################################################################################################
+
+    @route('/config', method=['OPTIONS'])
+    @route('/commands', method=['OPTIONS'])
+    @route('/command', method=['OPTIONS'])
+    @route('/channel', method=['OPTIONS'])
+    @route('/channels', method=['OPTIONS'])
+    @route('/recordings', method=['OPTIONS'])
+    @route('/enterpin', method=['OPTIONS'])
+    def api_cors_options():
+        return response_options()
 
     @get('/config')
     def api_get_config():
