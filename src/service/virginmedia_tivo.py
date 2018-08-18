@@ -145,11 +145,15 @@ class Virginmedia_tivo():
                             #
                             try:
                                 c = get_channel_details_from_key(int(itemFile.find('SourceChannel').text))
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['id'] = c['id']
                                 json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = c['name']
                                 json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['quality'] = c['quality']
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['plus1'] = c['plus1']
                             except Exception as e:
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['id'] = '-'
                                 json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['name'] = '-'
                                 json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['quality'] = '-'
+                                json_recordings[str(folderCount)]['items'][str(itemCount)]['channel']['plus1'] = '-'
                             #
                             try:
                                 json_recordings[str(folderCount)]['items'][str(itemCount)]['description'] = itemFile.find('Description').text
@@ -279,9 +283,11 @@ class Virginmedia_tivo():
                 #
                 json_channel = {}
                 json_channel['channel'] = {}
-                json_channel['channel']['number'] = str(chan_no)
+                json_channel['channel']['id'] = chan_details['id']
                 json_channel['channel']['name'] = chan_details['name']
+                json_channel['channel']['number'] = str(chan_no)
                 json_channel['channel']['quality'] = chan_details['quality']
+                json_channel['channel']['plus1'] = chan_details['plus1']
                 #
                 return json_channel
         return False

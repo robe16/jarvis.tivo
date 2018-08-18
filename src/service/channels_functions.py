@@ -5,18 +5,51 @@ from log.log import log_internal
 from service.channels import channels
 
 
+def get_channel_id_from_key(key):
+    #
+    try:
+        k = int(key)
+        #
+        for chan_id in channels:
+            if 'sd' in channels[chan_id]:
+                if channels[chan_id]['sd']['key'] == k:
+                    return chan_id
+            if 'hd' in channels[chan_id]:
+                if channels[chan_id]['hd']['key'] == k:
+                    return chan_id
+            if 'plus1' in channels[chan_id]:
+                if 'sd' in channels[chan_id]['plus1']:
+                    if channels[chan_id]['sd']['plus1']['key'] == k:
+                        return chan_id
+                if 'hd' in channels[chan_id]:
+                    if channels[chan_id]['hd']['plus1']['key'] == k:
+                        return chan_id
+        #
+        return False
+    except Exception as e:
+        log_internal(logException, logDesChannel_NameFromKey.format(key=key), description='fail', exception=e)
+        return False
+
+
 def get_channel_name_from_key(key):
     #
     try:
         k = int(key)
         #
-        for chan in channels:
-            if channels[chan]['sd']:
-                if channels[chan]['sd']['key'] == k:
-                    return chan
-            if channels[chan]['hd']:
-                if channels[chan]['hd']['key'] == k:
-                    return chan
+        for chan_id in channels:
+            if 'sd' in channels[chan_id]:
+                if channels[chan_id]['sd']['key'] == k:
+                    return channels[chan_id]['name']
+            if 'hd' in channels[chan_id]:
+                if channels[chan_id]['hd']['key'] == k:
+                    return channels[chan_id]['name']
+            if 'plus1' in channels[chan_id]:
+                if 'sd' in channels[chan_id]['plus1']:
+                    if channels[chan_id]['sd']['plus1']['key'] == k:
+                        return channels[chan_id]['hd']['plus1']['key']['name']
+                if 'hd' in channels[chan_id]:
+                    if channels[chan_id]['hd']['plus1']['key'] == k:
+                        return channels[chan_id]['hd']['plus1']['key']['name']
         #
         return False
     except Exception as e:
@@ -27,13 +60,37 @@ def get_channel_name_from_key(key):
 def get_channel_details_from_key(key):
     #
     try:
-        for chan in channels:
-            if channels[chan]['sd']:
-                if channels[chan]['sd']['key'] == key:
-                    return {'name': chan, 'quality': 'sd'}
-            if channels[chan]['hd']:
-                if channels[chan]['hd']['key'] == key:
-                    return {'name': chan, 'quality': 'hd'}
+        for chan_id in channels:
+            #
+            if 'sd' in channels[chan_id]:
+                if channels[chan_id]['sd']['key'] == key:
+                    return {'id': chan_id,
+                            'name': channels[chan_id]['name'],
+                            'quality': 'sd',
+                            'plus1': False}
+            #
+            elif 'hd' in channels[chan_id]:
+                if channels[chan_id]['hd']['key'] == key:
+                    return {'id': chan_id,
+                            'name': channels[chan_id]['name'],
+                            'quality': 'hd',
+                            'plus1': False}
+            #
+            elif 'plus1' in channels[chan_id]:
+                #
+                if 'sd' in channels[chan_id]:
+                    if channels[chan_id]['plus1']['sd']['key'] == key:
+                        return {'id': chan_id,
+                                'name': channels[chan_id]['plus1']['sd']['name'],
+                                'quality': 'sd',
+                                'plus1': True}
+                #
+                elif 'hd' in channels[chan_id]:
+                    if channels[chan_id]['hd']['plus1']['key'] == key:
+                        return {'id': chan_id,
+                                'name': channels[chan_id]['plus1']['sd']['name'],
+                                'quality': 'hd',
+                                'plus1': True}
         #
         return False
     except Exception as e:
@@ -44,19 +101,34 @@ def get_channel_details_from_key(key):
 def get_channel_key_from_name(name):
     #
     try:
-        if name in channels.keys():
+        for chan_id in channels:
             #
             package = get_cfg_details_package()
             #
             # Do HD first as preference
-            if channels[name]['hd']:
-                if check_package(name, 'hd', package):
-                    return channels[name]['hd']['key']
-            #
             # If HD does not yield results, fall back to SD
-            if channels[name]['sd']:
-                if check_package(name, 'sd', package):
-                    return channels[name]['sd']['key']
+            # then, check plus 1 channels, repeating hd preference over sd
+            #
+            if name == channels[chan_id]['name']:
+                #
+                if 'hd' in channels[chan_id]:
+                    if check_package(chan_id, 'hd', package):
+                        return channels[chan_id]['hd']['key']
+                #
+                elif 'sd' in channels[chan_id]:
+                    if check_package(chan_id, 'sd', package):
+                        return channels[chan_id]['sd']['key']
+            #
+            elif 'plus1' in channels[chan_id]:
+                #
+                if name == channels[chan_id]['plus1']['name']:
+                    if 'hd' in channels[chan_id]['plus1']:
+                        if check_package_plus1(chan_id, 'hd', package):
+                            return channels[chan_id]['plus1']['hd']['key']
+                    #
+                    elif 'sd' in channels[chan_id]['plus1']:
+                        if check_package_plus1(chan_id, 'sd', package):
+                            return channels[chan_id]['plus1']['sd']['key']
         #
         return False
     except Exception as e:
@@ -68,23 +140,44 @@ def get_channels(package):
     #
     chans = {}
     #
-    for chan in channels:
+    for chan_id in channels:
         #
         try:
             #
-            chans[chan] = {'sd': check_package(chan, 'sd', package),
-                           'hd': check_package(chan, 'hd', package)}
+            chans[chan_id] = {}
+            #
+            if 'sd' in channels[chan_id]:
+                chans[chan_id]['sd'] = check_package(chan_id, 'sd', package)
+            if 'hd' in channels[chan_id]:
+                chans[chan_id]['hd'] = check_package(chan_id, 'hd', package)
+            #
+            if 'plus1' in channels[chan_id]:
+                chans[chan_id]['plus1'] = {}
+                if 'sd' in channels[chan_id]:
+                    chans[chan_id]['plus1']['sd'] = check_package_plus1(chan_id, 'sd', package)
+                if 'hd' in channels[chan_id]:
+                    chans[chan_id]['plus1']['hd'] = check_package_plus1(chan_id, 'hd', package)
+            #
         except Exception as e:
             log_internal(logException, logDesChannel_ListFromPackage.format(package=package), description='fail', exception=e)
     #
     return {'channels': chans}
 
 
-def check_package(name, quality, package):
-    if channels[name][quality]:
-        chan_package = channels[name][quality]['package']
-        for p in package:
-            if p in chan_package:
+def check_package(chan_id, quality, packages):
+    if quality in channels[chan_id]:
+        for p in packages:
+            if p in channels[chan_id][quality]['package']:
                 return True
+    #
+    return False
+
+
+def check_package_plus1(chan_id, quality, packages):
+    if 'plus1' in channels[chan_id]:
+        if quality in channels[chan_id]['plus1']:
+            for p in packages:
+                if p in channels[chan_id][quality]['package']:
+                    return True
     #
     return False

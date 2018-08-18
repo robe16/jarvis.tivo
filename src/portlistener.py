@@ -12,6 +12,7 @@ from apis.get_commands import get_commands
 from apis.post_command import post_command
 from apis.get_channel import get_channel
 from apis.get_channels import get_channels
+from apis.get_checkchannels import get_checkchannels
 from apis.post_channel import post_channel
 from apis.get_recordings import get_recordings
 from apis.post_enterpin import post_enterpin
@@ -36,6 +37,7 @@ def start_bottle():
     @route('/command', method=['OPTIONS'])
     @route('/channel', method=['OPTIONS'])
     @route('/channels', method=['OPTIONS'])
+    @route('/checkchannels', method=['OPTIONS'])
     @route('/recordings', method=['OPTIONS'])
     @route('/enterpin', method=['OPTIONS'])
     def api_cors_options(**kwargs):
@@ -64,6 +66,11 @@ def start_bottle():
     @get('/channels')
     def api_get_channels():
         response = get_channels(request, _virginmedia_tivo)
+        return response
+
+    @get('/checkchannels')
+    def api_get_checkchannels():
+        response = get_checkchannels(request)
         return response
 
     @post('/channel')
