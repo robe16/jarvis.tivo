@@ -137,6 +137,41 @@ def get_channel_key_from_name(name, plus1=False):
         return False
 
 
+def get_channel_key_from_id(chan_id, plus1=False):
+    #
+    try:
+        package = get_cfg_details_package()
+        #
+        # Do HD first as preference
+        # If HD does not yield results, fall back to SD
+        # then, check plus 1 channels, repeating hd preference over sd
+        #
+        if plus1:
+            if 'plus1' in channels[chan_id]:
+                #
+                if 'hd' in channels[chan_id]['plus1']:
+                    if check_package_plus1(chan_id, 'hd', package):
+                        return channels[chan_id]['plus1']['hd']['key']
+                #
+                if 'sd' in channels[chan_id]['plus1']:
+                    if check_package_plus1(chan_id, 'sd', package):
+                        return channels[chan_id]['plus1']['sd']['key']
+            #
+        else:
+            if 'hd' in channels[chan_id]:
+                if check_package(chan_id, 'hd', package):
+                    return channels[chan_id]['hd']['key']
+            #
+            if 'sd' in channels[chan_id]:
+                if check_package(chan_id, 'sd', package):
+                    return channels[chan_id]['sd']['key']
+        #
+        return False
+    except Exception as e:
+        log_internal(logException, logDesChannel_KeyFromId.format(id=chan_id, plus1=plus1), description='fail', exception=e)
+        return False
+
+
 def get_channels(package):
     #
     chans = {}

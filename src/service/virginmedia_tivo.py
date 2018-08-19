@@ -14,7 +14,8 @@ from config.config import get_cfg_details_ip, get_cfg_details_mak, get_cfg_detai
 
 from service.commands import commands
 from service.channels_functions import get_channels
-from service.channels_functions import get_channel_details_from_key, get_channel_key_from_name
+from service.channels_functions import get_channel_details_from_key, get_channel_key_from_id
+
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -334,19 +335,23 @@ class Virginmedia_tivo():
             log_internal(logException, logDescDeviceGetChannelsForPackage, exception=e)
             return False
 
-    def sendChannel(self, chan_name, plus1=False):
+    def sendChannel(self, chan_id, plus1=False):
         try:
-            chan_key = get_channel_key_from_name(chan_name, plus1)
-            response = self._send_telnet(ipaddress=get_cfg_details_ip(),
-                                         port=self._port,
-                                         data=("SETCH {chan_key}\r").format(chan_key=chan_key),
-                                         response=True)
-            if response.startswith('CH_FAILED'):
+            chan_key = get_channel_key_from_id(chan_id, plus1)
+            if chan_key:
+                response = self._send_telnet(ipaddress=get_cfg_details_ip(),
+                                             port=self._port,
+                                             data=("SETCH {chan_key}\r").format(chan_key=chan_key),
+                                             response=True)
+                if response.startswith('CH_FAILED'):
+                    log_internal(logFail, logDescDeviceSendChannel)
+                    return False
+                else:
+                    log_internal(logPass, logDescDeviceSendChannel)
+                    return True
+            else:
                 log_internal(logFail, logDescDeviceSendChannel)
                 return False
-            else:
-                log_internal(logPass, logDescDeviceSendChannel)
-                return True
         except Exception as e:
             log_internal(logException, logDescDeviceSendChannel, exception=e)
             return False

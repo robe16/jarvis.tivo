@@ -8,6 +8,7 @@ logDesc_Broadcast = 'Broadcasting message'
 logDesChannel_NameFromKey = 'Attempted get channel name from key - \'{key}\''
 logDesChannel_DetailsFromKey = 'Attempted get channel details from key - \'{key}\''
 logDesChannel_KeyFromName = 'Attempted get channel key from name - \'{name}\''
+logDesChannel_KeyFromId = 'Attempted get channel key from id - \'{id}\' - plus1: \'{plus1}\''
 logDesChannel_ListFromPackage = 'Attempted get channel list from package - \'{package}\''
 
 logDescDeviceGetRecordings = 'Get recordings'
