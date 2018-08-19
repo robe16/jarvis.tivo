@@ -145,6 +145,7 @@ def get_channels(package):
         try:
             #
             chans[chan_id] = {}
+            chans[chan_id]['name'] = channels[chan_id]['name']
             #
             if 'sd' in channels[chan_id]:
                 chans[chan_id]['sd'] = check_package(chan_id, 'sd', package)
@@ -153,6 +154,7 @@ def get_channels(package):
             #
             if 'plus1' in channels[chan_id]:
                 chans[chan_id]['plus1'] = {}
+                chans[chan_id]['plus1']['name'] = channels[chan_id]['plus1']['name']
                 if 'sd' in channels[chan_id]:
                     chans[chan_id]['plus1']['sd'] = check_package_plus1(chan_id, 'sd', package)
                 if 'hd' in channels[chan_id]:
