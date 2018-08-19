@@ -1,5 +1,6 @@
 {
   "type": "object",
   "command": {"type" : "string"},
+  "plus1": {"type" : "boolean"},
   "required": ["command"]
 }
