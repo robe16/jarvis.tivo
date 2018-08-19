@@ -98,7 +98,7 @@ def get_channel_details_from_key(key):
         return False
 
 
-def get_channel_key_from_name(name):
+def get_channel_key_from_name(name, plus1=False):
     #
     try:
         for chan_id in channels:
@@ -119,16 +119,17 @@ def get_channel_key_from_name(name):
                     if check_package(chan_id, 'sd', package):
                         return channels[chan_id]['sd']['key']
             #
-            if 'plus1' in channels[chan_id]:
-                #
-                if name == channels[chan_id]['plus1']['name']:
-                    if 'hd' in channels[chan_id]['plus1']:
-                        if check_package_plus1(chan_id, 'hd', package):
-                            return channels[chan_id]['plus1']['hd']['key']
+            if plus1:
+                if 'plus1' in channels[chan_id]:
                     #
-                    if 'sd' in channels[chan_id]['plus1']:
-                        if check_package_plus1(chan_id, 'sd', package):
-                            return channels[chan_id]['plus1']['sd']['key']
+                    if name == channels[chan_id]['plus1']['name']:
+                        if 'hd' in channels[chan_id]['plus1']:
+                            if check_package_plus1(chan_id, 'hd', package):
+                                return channels[chan_id]['plus1']['hd']['key']
+                        #
+                        if 'sd' in channels[chan_id]['plus1']:
+                            if check_package_plus1(chan_id, 'sd', package):
+                                return channels[chan_id]['plus1']['sd']['key']
         #
         return False
     except Exception as e:

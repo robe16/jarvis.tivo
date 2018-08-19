@@ -334,9 +334,9 @@ class Virginmedia_tivo():
             log_internal(logException, logDescDeviceGetChannelsForPackage, exception=e)
             return False
 
-    def sendChannel(self, chan_name):
+    def sendChannel(self, chan_name, plus1=False):
         try:
-            chan_key = get_channel_key_from_name(chan_name)
+            chan_key = get_channel_key_from_name(chan_name, plus1)
             response = self._send_telnet(ipaddress=get_cfg_details_ip(),
                                          port=self._port,
                                          data=("SETCH {chan_key}\r").format(chan_key=chan_key),

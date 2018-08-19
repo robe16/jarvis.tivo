@@ -18,7 +18,12 @@ def post_channel(request, _virginmedia_tivo):
         if validate_channel(data_dict):
             #
             channel = data_dict['channel']
-            r = _virginmedia_tivo.sendChannel(channel)
+            if 'plus1' in data_dict:
+                plus1 = data_dict['plus1']
+            else:
+                plus1 = False
+            #
+            r = _virginmedia_tivo.sendChannel(channel, plus1)
             #
             if not bool(r):
                 status = httpStatusFailure
