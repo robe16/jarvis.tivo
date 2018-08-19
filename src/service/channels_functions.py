@@ -145,20 +145,23 @@ def get_channels(package):
         try:
             #
             chans[chan_id] = {}
+            chans[chan_id]['quality'] = []
             chans[chan_id]['name'] = channels[chan_id]['name']
             #
-            if 'sd' in channels[chan_id]:
-                chans[chan_id]['sd'] = check_package(chan_id, 'sd', package)
-            if 'hd' in channels[chan_id]:
-                chans[chan_id]['hd'] = check_package(chan_id, 'hd', package)
+            if check_package(chan_id, 'sd', package):
+                chans[chan_id]['quality'].append('sd')
+            if check_package(chan_id, 'hd', package):
+                chans[chan_id]['quality'].append('hd')
             #
             if 'plus1' in channels[chan_id]:
                 chans[chan_id]['plus1'] = {}
+                chans[chan_id]['plus1']['quality'] = []
                 chans[chan_id]['plus1']['name'] = channels[chan_id]['plus1']['name']
-                if 'sd' in channels[chan_id]:
-                    chans[chan_id]['plus1']['sd'] = check_package_plus1(chan_id, 'sd', package)
-                if 'hd' in channels[chan_id]:
-                    chans[chan_id]['plus1']['hd'] = check_package_plus1(chan_id, 'hd', package)
+                #
+                if check_package_plus1(chan_id, 'sd', package):
+                    chans[chan_id]['plus1']['quality'].append('sd')
+                if check_package_plus1(chan_id, 'hd', package):
+                    chans[chan_id]['plus1']['quality'].append('hd')
             #
         except Exception as e:
             log_internal(logException, logDesChannel_ListFromPackage.format(package=package), description='fail', exception=e)
