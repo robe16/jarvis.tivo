@@ -343,15 +343,15 @@ class Virginmedia_tivo():
                                              port=self._port,
                                              data=("SETCH {chan_key}\r").format(chan_key=chan_key),
                                              response=True)
-                if response.startswith('CH_FAILED'):
-                    log_internal(logFail, logDescDeviceSendChannel)
-                    return False
-                else:
-                    log_internal(logPass, logDescDeviceSendChannel)
-                    return True
-            else:
-                log_internal(logFail, logDescDeviceSendChannel)
-                return False
+                if bool(response):
+                    if response.startswith('CH_FAILED'):
+                        log_internal(logFail, logDescDeviceSendChannel)
+                        return False
+                    else:
+                        log_internal(logPass, logDescDeviceSendChannel)
+                        return True
+            log_internal(logFail, logDescDeviceSendChannel)
+            return False
         except Exception as e:
             log_internal(logException, logDescDeviceSendChannel, exception=e)
             return False
