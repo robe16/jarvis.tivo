@@ -243,8 +243,8 @@ class Virginmedia_tivo():
                 op = tn.read_eager()
                 if op == '':
                     output = True
-                else:
-                    output = op if (response and not bool(op)) else True
+                elif response:
+                    output = op if op else True
             tn.close()
             return output
         except Exception as e:
@@ -343,7 +343,7 @@ class Virginmedia_tivo():
                                              port=self._port,
                                              data=("SETCH {chan_key}\r").format(chan_key=chan_key),
                                              response=True)
-                if bool(response):
+                if not isinstance(response, bool):
                     if response.startswith('CH_FAILED'):
                         log_internal(logFail, logDescDeviceSendChannel)
                         return False
