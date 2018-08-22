@@ -245,6 +245,8 @@ class Virginmedia_tivo():
                     output = True
                 elif response:
                     output = op if op else True
+                else:
+                    output = bool(op)
             tn.close()
             return output
         except Exception as e:
